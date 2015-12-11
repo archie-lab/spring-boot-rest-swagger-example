@@ -56,8 +56,7 @@ public class SwaggerConfig {
                                 .responseModel(new ModelRef("Error"))
                                 .build()))
                 .securitySchemes(newArrayList(apiKey()))
-                .securityContexts(newArrayList(securityContext()))
-                .groupName("user-api");
+                .securityContexts(newArrayList(securityContext()));
     }
 
     private ApiKey apiKey() {

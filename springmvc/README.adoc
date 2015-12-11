@@ -9,16 +9,68 @@ toc::[]
 
 *Spring Boot* allows us to easy create RESTful web-services. +
 *Swagger* is a simple yet powerful representation of your RESTful API. Swagger specifies a format to describe the capabilities and operations of services and with Swagger UI it is possible to explore our REST API with a nice graphical user interface in our browser. +
-*Springfox* is a project that aims at creating automated JSON API documentation for API’s built with Spring
-
-http://springfox.github.io/springfox/docs/current/[]
 
 == Build configuration
+
+.build.gradle
+[source,java]
+----
+group 'com.archie-lab.spring-boot'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.3.0.RELEASE"
+    }
+}
+
+jar {
+    baseName = 'spring-boot-rest-swagger-springmvc'
+    version = '1.0'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-parent:1.3.0.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-data-rest"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    runtime "com.h2database:h2"
+    compile "com.google.guava:guava:18.0"
+    compile "com.mangofactory:swagger-springmvc:0.9.5"
+    compile "org.ajar:swagger-spring-mvc-ui:0.4"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
+}
+----
 
 
 == Model
 
-.`User.java`
+.User.java
 [source,java]
 ----
 package example.model;
@@ -83,7 +135,7 @@ public class User {
 
 == Repository
 
-.`UserRepository.java`
+.UserRepository.java
 [source,java]
 ----
 package example.repository;
@@ -100,7 +152,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 == Controller
 
-.`UserController.java`
+.UserController.java
 [source,java]
 ----
 package example.controller;
@@ -142,7 +194,7 @@ public class UserController {
 
 ----
 
-.`HelloController.java`
+.HelloController.java
 [source,java]
 ----
 package example.controller;
@@ -166,16 +218,61 @@ public class HelloController {
 
 == Swagger Config
 
+[source,java]
+----
+package example.config;
+
+import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
+import com.mangofactory.swagger.models.dto.ApiInfo;
+import com.mangofactory.swagger.plugin.EnableSwagger;
+import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+@Configuration
+@EnableSwagger
+public class SwaggerConfig extends WebMvcConfigurerAdapter {
+
+    @Autowired
+    private SpringSwaggerConfig springSwaggerConfig;
+
+    @Bean
+    public SwaggerSpringMvcPlugin swaggerSpringMvcPlugin() {
+        return new SwaggerSpringMvcPlugin(springSwaggerConfig).apiInfo(apiInfo()).includePatterns("/user/*", "/hello/*");
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfo(
+                "Some API",
+                "API for archie-lab",
+                "archie-lab API terms of service",
+                "arch817@gmail.com",
+                "Some API Licence Type",
+                "Some API License URL"
+        );
+    }
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+}
+
+----
 
 
 
 
 
 
+== Swagger UI
 
+http://localhost:8080/api-docs[]
 
-
-
+http://localhost:8080/sdoc.jsp[]
 
 
 
