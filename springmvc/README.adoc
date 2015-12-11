@@ -1,5 +1,6 @@
 = Spring Boot using REST and Swagger example
 :toc: macro
+:numbered:
 
 toc::[]
 
