@@ -19,8 +19,12 @@ public class UserController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public User createUser(@RequestBody @Valid final User user) {
