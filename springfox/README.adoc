@@ -1,0 +1,180 @@
+= Spring Boot using REST and Swagger example
+:toc: macro
+
+toc::[]
+
+
+
+== About
+
+*Spring Boot* allows us to easy create RESTful web-services. +
+*Swagger* is a simple yet powerful representation of your RESTful API. Swagger specifies a format to describe the capabilities and operations of services and with Swagger UI it is possible to explore our REST API with a nice graphical user interface in our browser. +
+*Springfox* is a project that aims at creating automated JSON API documentation for API’s built with Spring
+
+== Build configuration
+
+
+== Model
+
+.`User.java`
+[source,java]
+----
+package example.model;
+
+import com.google.common.base.MoreObjects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@Entity
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false, updatable = false)
+    private Long id;
+
+    @NotNull
+    @Size(max = 64)
+    @Column(name = "login", nullable = false)
+    private String login;
+
+    public User() {
+    }
+
+    public User(Long id, String login) {
+        this.id = id;
+        this.login = login;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("login", login)
+                .toString();
+    }
+}
+----
+
+
+== Repository
+
+.`UserRepository.java`
+[source,java]
+----
+package example.repository;
+
+import example.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+}
+
+----
+
+
+== Controller
+
+.`UserController.java`
+[source,java]
+----
+package example.controller;
+
+import example.model.User;
+import example.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @RequestMapping(method = RequestMethod.POST)
+    public User createUser(@RequestBody @Valid final User user) {
+        LOGGER.debug("Received request to create the {}", user);
+        return userRepository.save(user);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public List<User> getUsers() {
+        LOGGER.debug("Received request to list all users");
+        return userRepository.findAll();
+    }
+}
+
+----
+
+.`HelloController.java`
+[source,java]
+----
+package example.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/hello")
+public class HelloController {
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String hello() {
+        return "Hello, World!";
+    }
+}
+
+----
+
+
+== Swagger Config
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
