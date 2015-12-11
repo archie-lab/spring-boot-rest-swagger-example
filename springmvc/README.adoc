@@ -9,6 +9,18 @@ toc::[]
 
 *Spring Boot* allows us to easy create RESTful web-services. +
 *Swagger* is a simple yet powerful representation of your RESTful API. Swagger specifies a format to describe the capabilities and operations of services and with Swagger UI it is possible to explore our REST API with a nice graphical user interface in our browser. +
+Swagger is a specification and complete framework implementation for describing, producing, consuming, and visualizing RESTful web services. The goal of Swagger is to enable client and documentation systems to update at the same pace as the server. The documentation of methods, parameters, and models are tightly integrated into the server code, allowing APIs to always stay in sync. +
+*Springfox* is a project that aims at creating automated JSON API documentation for API’s built with Spring +
+http://springfox.github.io/springfox/docs/current/[]
+
+=== Why is Swagger useful?
+
+The  framework simultaneously solves server, client, and documentation/sandbox needs.
+
+With Swagger’s declarative resource specification, clients can understand and consume services without knowledge of server implementation or access to the server code. The Swagger UI framework allows both developers and non-developers to interact with the API in a sandbox UI that gives clear insight into how the API responds to parameters and options.
+
+It happily speaks both JSON and XML, with additional formats in the works.
+
 
 == Build configuration
 
@@ -262,9 +274,6 @@ public class SwaggerConfig extends WebMvcConfigurerAdapter {
 }
 
 ----
-
-
-
 
 
 
