@@ -43,6 +43,7 @@ dependencies {
     compile "com.google.guava:guava:18.0"
     compile "com.mangofactory:swagger-springmvc:0.9.5"
     compile "org.ajar:swagger-spring-mvc-ui:0.4"
+    runtime "org.apache.tomcat.embed:tomcat-embed-jasper"
     testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
